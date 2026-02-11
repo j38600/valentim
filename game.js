@@ -1,4 +1,6 @@
-﻿//configuração do firebase
+// -----------------------------
+// Firebase config (ES module)
+// -----------------------------
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore,
@@ -12,25 +14,26 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAfULLIaP3Ovs-cJlFV_gsrSiYcwZvAx_E",
-    authDomain: "valentim-d8b52.firebaseapp.com",
-    projectId: "valentim-d8b52",
-    storageBucket: "valentim-d8b52.firebasestorage.app",
-    messagingSenderId: "131144862287",
-    appId: "1:131144862287:web:ff39b696efac3a1243383a"
-  };
+  apiKey: "AIzaSyAfULLIaP3Ovs-cJlFV_gsrSiYcwZvAx_E",
+  authDomain: "valentim-d8b52.firebaseapp.com",
+  projectId: "valentim-d8b52",
+  storageBucket: "valentim-d8b52.firebasestorage.app",
+  messagingSenderId: "131144862287",
+  appId: "1:131144862287:web:ff39b696efac3a1243383a",
+};
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db  = getFirestore(app);
 
+// -----------------------------
+// Firestore helpers
+// -----------------------------
 async function saveMessage(texto) {
   if (!texto || texto.length < 3) return;
-
   const col = collection(db, "mensagens");
-
   await addDoc(col, {
     texto,
-    createdAt: serverTimestamp()
+    createdAt: serverTimestamp(),
   });
 }
 
@@ -40,9 +43,9 @@ async function loadMessages() {
     orderBy("createdAt", "desc"),
     limit(50)
   );
-
   const snapshot = await getDocs(q);
 
+  // cards comes from Firestore now
   cards = snapshot.docs.map(doc => ({
     x: Math.random() * 700 + 40,
     y: Math.random() * 500 + 40,
@@ -56,14 +59,16 @@ async function loadMessages() {
   updateCounter?.();
 }
 
-saveBtn.addEventListener("click", async () => {
-  const text = input.value.trim();
-  if (text.length < 3) return;
-
-  await saveMessage(text);
-  modal.classList.add("hidden");
-  loadMessages();
-});
+// -----------------------------
+// Prompt-based add flow
+// -----------------------------
+async function askAndSaveMessage() {
+  const txt = (window.prompt("Escreve a tua mensagem de São Valentim 💌", "Com amor...") || "").trim();
+  if (txt.length >= 3) {
+    await saveMessage(txt);
+    await loadMessages();
+  }
+}
 
 
 // Configuração do Canvas
@@ -1426,6 +1431,7 @@ showMessage(introMessage, null, '🌸 Bem-vinda', 'intro');
 // Iniciar o jogo
 gameLoop();
 console.log('🎮 Jogo de São Valentim carregado! Use as setas para mover e ESPAÇO para ler cartas.');
+
 
 
 
