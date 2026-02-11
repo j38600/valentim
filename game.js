@@ -161,10 +161,45 @@ btnRight?.addEventListener('touchstart',  e => { e.preventDefault(); pressKey('A
 btnRight?.addEventListener('touchend',    e => { e.preventDefault(); releaseKey('ArrowRight'); }, opts);
 btnRight?.addEventListener('touchcancel', e => { e.preventDefault(); releaseKey('ArrowRight'); }, opts);
 
-// Space button behaves like the keyboard spacebar (open/close message)
-btnSpace?.addEventListener('touchstart',  e => { e.preventDefault(); pressSpace();   }, opts);
-btnSpace?.addEventListener('touchend',    e => { e.preventDefault(); releaseSpace(); }, opts);
-btnSpace?.addEventListener('touchcancel', e => { e.preventDefault(); releaseSpace(); }, opts);
+// ---- Space button handlers (touch + mouse) ----
+const dpad = document.getElementById('dpad');
+const btnSpace = dpad?.querySelector('.space');
+
+function pressSpaceKeys() {
+  game.keys[' '] = true;
+  game.keys['Space'] = true;
+}
+function releaseSpaceKeys() {
+  game.keys[' '] = false;
+  game.keys['Space'] = false;
+}
+
+function tapSpaceLikeKeyboard() {
+  if (game.showingMessage) {
+    // Keyboard path: keydown Space closes an open message immediately
+    closeMessage();
+  } else {
+    // Interaction path near a card/pet/bench: briefly "hold" space
+    pressSpaceKeys();
+    // release shortly after so it behaves like a tap
+    setTimeout(releaseSpaceKeys, 80);
+  }
+}
+
+const touchOpts = { passive: false };
+
+btnSpace?.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  tapSpaceLikeKeyboard();
+}, touchOpts);
+
+// For desktop testing / mouse
+btnSpace?.addEventListener('mousedown', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  tapSpaceLikeKeyboard();
+});
 
 // Optional: also support mouse/tap for desktop testing
 const clickOpts = e => { e.preventDefault(); e.stopPropagation(); };
@@ -1541,6 +1576,7 @@ showMessage(introMessage, null, '🌸 Bem-vinda', 'intro');
 // Iniciar o jogo
 gameLoop();
 console.log('🎮 Jogo de São Valentim carregado! Use as setas para mover e ESPAÇO para ler cartas.');
+
 
 
 
