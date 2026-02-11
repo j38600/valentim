@@ -114,7 +114,24 @@ document.addEventListener('keydown', (e) => {
     closeAddMessageModal();
   }
 });
+function startDir(key) { game.keys[key] = true; }
+function stopDir(key)  { game.keys[key] = false; }
 
+// Up
+document.querySelector('#dpad .up').addEventListener('touchstart', () => startDir("ArrowUp"));
+document.querySelector('#dpad .up').addEventListener('touchend',   () => stopDir("ArrowUp"));
+
+// Down
+document.querySelector('#dpad .down').addEventListener('touchstart', () => startDir("ArrowDown"));
+document.querySelector('#dpad .down').addEventListener('touchend',   () => stopDir("ArrowDown"));
+
+// Left
+document.querySelector('#dpad .left').addEventListener('touchstart', () => startDir("ArrowLeft"));
+document.querySelector('#dpad .left').addEventListener('touchend',   () => stopDir("ArrowLeft"));
+
+// Right
+document.querySelector('#dpad .right').addEventListener('touchstart', () => startDir("ArrowRight"));
+document.querySelector('#dpad .right').addEventListener('touchend',   () => stopDir("ArrowRight"));
 // === SAVE HANDLER (uses your Firestore helpers) ===
 saveBtn?.addEventListener('click', async () => {
   const text = (input?.value || '').trim();
@@ -1487,6 +1504,7 @@ showMessage(introMessage, null, '🌸 Bem-vinda', 'intro');
 // Iniciar o jogo
 gameLoop();
 console.log('🎮 Jogo de São Valentim carregado! Use as setas para mover e ESPAÇO para ler cartas.');
+
 
 
 
