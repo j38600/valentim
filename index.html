@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤️ Mensagens de Amor - São Valentim</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" id="gameContainer">
+        <h1>❤️ Jogo de São Valentim ❤️</h1>
+        <div class="info">
+            <p>Utiliza as <strong>SETAS</strong> para te moveres • Pressiona <strong>ESPAÇO</strong> para leres as cartas</p>
+            <p id="counter">Cartas lidas: 0/12</p>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="messageBox" class="message-box hidden">
+            <div class="message-content">
+                <h2 id="messageTitle">💌 Carta de Amor</h2>
+                <p id="messageText"></p>
+                <button id="closeBtn">Fechar (Espaço)</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="game.js"></script>
+</body>
+</html>
