@@ -23,8 +23,21 @@
             </div>
         </div>
     </div>
-    
+    <!-- Modal para adicionar mensagem -->
+    <div id="messageModal" class="message-box hidden" aria-hidden="true">
+      <div class="message-content" role="dialog" aria-labelledby="addMsgTitle" aria-modal="true">
+        <h2 id="addMsgTitle">Adicionar mensagem 💌</h2>
+        <p>Escreve uma mensagem (mín. 3 caracteres):</p>
+        <input id="messageInput" type="text" placeholder="Com amor..." 
+               style="width:100%;padding:10px;border:2px solid #b1865d;border-radius:12px;margin:12px 0;">
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button id="cancelBtn" class="ui-btn" type="button">Cancelar</button>
+          <button id="saveBtn" class="ui-btn" type="button">Guardar</button>
+        </div>
+      </div>
+    </div>
     <script type="module" src="game.js"></script>
 </body>
 </html>
+
 
