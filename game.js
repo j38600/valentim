@@ -114,24 +114,6 @@ document.addEventListener('keydown', (e) => {
     closeAddMessageModal();
   }
 });
-function startDir(key) { game.keys[key] = true; }
-function stopDir(key)  { game.keys[key] = false; }
-
-// Up
-document.querySelector('#dpad .up').addEventListener('touchstart', () => startDir("ArrowUp"));
-document.querySelector('#dpad .up').addEventListener('touchend',   () => stopDir("ArrowUp"));
-
-// Down
-document.querySelector('#dpad .down').addEventListener('touchstart', () => startDir("ArrowDown"));
-document.querySelector('#dpad .down').addEventListener('touchend',   () => stopDir("ArrowDown"));
-
-// Left
-document.querySelector('#dpad .left').addEventListener('touchstart', () => startDir("ArrowLeft"));
-document.querySelector('#dpad .left').addEventListener('touchend',   () => stopDir("ArrowLeft"));
-
-// Right
-document.querySelector('#dpad .right').addEventListener('touchstart', () => startDir("ArrowRight"));
-document.querySelector('#dpad .right').addEventListener('touchend',   () => stopDir("ArrowRight"));
 // === SAVE HANDLER (uses your Firestore helpers) ===
 saveBtn?.addEventListener('click', async () => {
   const text = (input?.value || '').trim();
@@ -142,6 +124,61 @@ saveBtn?.addEventListener('click', async () => {
   await saveMessage(text);   // your addDoc(...) function
   await loadMessages();      // refresh cards & counter
   closeAddMessageModal();
+});
+
+// ---- D-Pad → game.keys mapping (mobile) ----
+const dpad = document.getElementById('dpad');
+const btnUp    = dpad?.querySelector('.up');
+const btnDown  = dpad?.querySelector('.down');
+const btnLeft  = dpad?.querySelector('.left');
+const btnRight = dpad?.querySelector('.right');
+const btnSpace = dpad?.querySelector('.space');
+
+// Helpers to press/release keys the game already understands
+function pressKey(k)   { game.keys[k] = true; }
+function releaseKey(k) { game.keys[k] = false; }
+
+// When we simulate Space, set both ' ' and 'Space' to be safe with your code
+function pressSpace()   { game.keys[' '] = true; game.keys['Space'] = true; }
+function releaseSpace() { game.keys[' '] = false; game.keys['Space'] = false; }
+
+// Attach touch handlers with preventDefault to avoid scrolling
+const opts = { passive: false };
+
+btnUp?.addEventListener('touchstart',  e => { e.preventDefault(); pressKey('ArrowUp');   }, opts);
+btnUp?.addEventListener('touchend',    e => { e.preventDefault(); releaseKey('ArrowUp'); }, opts);
+btnUp?.addEventListener('touchcancel', e => { e.preventDefault(); releaseKey('ArrowUp'); }, opts);
+
+btnDown?.addEventListener('touchstart',  e => { e.preventDefault(); pressKey('ArrowDown');   }, opts);
+btnDown?.addEventListener('touchend',    e => { e.preventDefault(); releaseKey('ArrowDown'); }, opts);
+btnDown?.addEventListener('touchcancel', e => { e.preventDefault(); releaseKey('ArrowDown'); }, opts);
+
+btnLeft?.addEventListener('touchstart',  e => { e.preventDefault(); pressKey('ArrowLeft');   }, opts);
+btnLeft?.addEventListener('touchend',    e => { e.preventDefault(); releaseKey('ArrowLeft'); }, opts);
+btnLeft?.addEventListener('touchcancel', e => { e.preventDefault(); releaseKey('ArrowLeft'); }, opts);
+
+btnRight?.addEventListener('touchstart',  e => { e.preventDefault(); pressKey('ArrowRight');   }, opts);
+btnRight?.addEventListener('touchend',    e => { e.preventDefault(); releaseKey('ArrowRight'); }, opts);
+btnRight?.addEventListener('touchcancel', e => { e.preventDefault(); releaseKey('ArrowRight'); }, opts);
+
+// Space button behaves like the keyboard spacebar (open/close message)
+btnSpace?.addEventListener('touchstart',  e => { e.preventDefault(); pressSpace();   }, opts);
+btnSpace?.addEventListener('touchend',    e => { e.preventDefault(); releaseSpace(); }, opts);
+btnSpace?.addEventListener('touchcancel', e => { e.preventDefault(); releaseSpace(); }, opts);
+
+// Optional: also support mouse/tap for desktop testing
+const clickOpts = e => { e.preventDefault(); e.stopPropagation(); };
+btnSpace?.addEventListener('mousedown', (e) => { clickOpts(e); pressSpace();   });
+btnSpace?.addEventListener('mouseup',   (e) => { clickOpts(e); releaseSpace(); });
+btnSpace?.addEventListener('mouseleave',(e) => { clickOpts(e); releaseSpace(); });
+
+['up','down','left','right'].forEach(name => {
+  const el = dpad?.querySelector('.' + name);
+  if (!el) return;
+  const map = { up:'ArrowUp', down:'ArrowDown', left:'ArrowLeft', right:'ArrowRight' }[name];
+  el.addEventListener('mousedown',  e => { clickOpts(e); pressKey(map);   });
+  el.addEventListener('mouseup',    e => { clickOpts(e); releaseKey(map); });
+  el.addEventListener('mouseleave', e => { clickOpts(e); releaseKey(map); });
 });
 
 // Configuração do Canvas
@@ -1504,6 +1541,7 @@ showMessage(introMessage, null, '🌸 Bem-vinda', 'intro');
 // Iniciar o jogo
 gameLoop();
 console.log('🎮 Jogo de São Valentim carregado! Use as setas para mover e ESPAÇO para ler cartas.');
+
 
 
 
