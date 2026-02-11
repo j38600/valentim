@@ -64,14 +64,6 @@ saveBtn.addEventListener("click", async () => {
   modal.classList.add("hidden");
   loadMessages();
 });
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /mensagens/{doc} {
-      allow read, write: if true;
-    }
-  }
-}
 
 
 // Configuração do Canvas
@@ -1434,5 +1426,6 @@ showMessage(introMessage, null, '🌸 Bem-vinda', 'intro');
 // Iniciar o jogo
 gameLoop();
 console.log('🎮 Jogo de São Valentim carregado! Use as setas para mover e ESPAÇO para ler cartas.');
+
 
 
