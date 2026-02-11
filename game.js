@@ -132,15 +132,10 @@ const btnUp    = dpad?.querySelector('.up');
 const btnDown  = dpad?.querySelector('.down');
 const btnLeft  = dpad?.querySelector('.left');
 const btnRight = dpad?.querySelector('.right');
-const btnSpace = dpad?.querySelector('.space');
 
 // Helpers to press/release keys the game already understands
 function pressKey(k)   { game.keys[k] = true; }
 function releaseKey(k) { game.keys[k] = false; }
-
-// When we simulate Space, set both ' ' and 'Space' to be safe with your code
-function pressSpace()   { game.keys[' '] = true; game.keys['Space'] = true; }
-function releaseSpace() { game.keys[' '] = false; game.keys['Space'] = false; }
 
 // Attach touch handlers with preventDefault to avoid scrolling
 const opts = { passive: false };
@@ -1558,6 +1553,7 @@ showMessage(introMessage, null, '🌸 Bem-vinda', 'intro');
 // Iniciar o jogo
 gameLoop();
 console.log('🎮 Jogo de São Valentim carregado! Use as setas para mover e ESPAÇO para ler cartas.');
+
 
 
 
