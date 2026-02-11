@@ -69,7 +69,63 @@ async function askAndSaveMessage() {
     await loadMessages();
   }
 }
+// === SELECT UI ELEMENTS ===
+const addMsgBtn  = document.getElementById('addMsgBtn');
+const modal      = document.getElementById('messageModal');
+const input      = document.getElementById('messageInput');
+const saveBtn    = document.getElementById('saveBtn');
+const cancelBtn  = document.getElementById('cancelBtn');
 
+// Log to confirm we have them (temporary diagnostics)
+console.log({ addMsgBtn, modal, input, saveBtn, cancelBtn });
+
+// === MODAL HELPERS ===
+function openAddMessageModal() {
+  if (!modal || !input) return;
+  input.value = '';
+  modal.classList.remove('hidden');
+  modal.setAttribute('aria-hidden', 'false');
+  // Next tick focus to ensure rendered
+  setTimeout(() => input.focus(), 0);
+}
+function closeAddMessageModal() {
+  if (!modal) return;
+  modal.classList.add('hidden');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+// === EVENT WIRING ===
+addMsgBtn?.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();               // avoid bubbling into canvas / overlays
+  openAddMessageModal();
+});
+
+cancelBtn?.addEventListener('click', () => closeAddMessageModal());
+
+// Close when clicking outside the dialog content
+modal?.addEventListener('click', (e) => {
+  if (e.target === modal) closeAddMessageModal();
+});
+
+// Close on ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+    closeAddMessageModal();
+  }
+});
+
+// === SAVE HANDLER (uses your Firestore helpers) ===
+saveBtn?.addEventListener('click', async () => {
+  const text = (input?.value || '').trim();
+  if (text.length < 3) {
+    input?.focus();
+    return;
+  }
+  await saveMessage(text);   // your addDoc(...) function
+  await loadMessages();      // refresh cards & counter
+  closeAddMessageModal();
+});
 
 // Configuração do Canvas
 const canvas = document.getElementById('gameCanvas');
@@ -1431,6 +1487,7 @@ showMessage(introMessage, null, '🌸 Bem-vinda', 'intro');
 // Iniciar o jogo
 gameLoop();
 console.log('🎮 Jogo de São Valentim carregado! Use as setas para mover e ESPAÇO para ler cartas.');
+
 
 
 
